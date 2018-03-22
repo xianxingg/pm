@@ -93,14 +93,14 @@ function loadGraph(name, progress) {
   }
 
   function loadPositions() {
-    return request(galaxyEndpoint + '/positions.bin', {
-      responseType: 'arraybuffer',
+    return request('/positions.json', {
+      responseType: 'json',
       progress: reportProgress(name, 'positions')
     }).then(setPositions);
   }
 
   function setPositions(buffer) {
-    positions = new Int32Array(buffer);
+    positions = new Int32Array(Object.values(buffer));
     var scaleFactor = appConfig.getScaleFactor();
     for (var i = 0; i < positions.length; ++i) {
       positions[i] *= scaleFactor;
@@ -109,14 +109,14 @@ function loadGraph(name, progress) {
   }
 
   function loadLinks() {
-    return request(galaxyEndpoint + '/links.bin', {
-      responseType: 'arraybuffer',
+    return request('/links.json', {
+      responseType: 'json',
       progress: reportProgress(name, 'links')
     }).then(setLinks);
   }
 
   function setLinks(buffer) {
-    var links = new Int32Array(buffer);
+    var links = new Int32Array(Object.keys(buffer));
     var lastArray = [];
     outLinks[0] = lastArray;
     var srcIndex;
@@ -161,7 +161,7 @@ function loadGraph(name, progress) {
   }
 
   function loadLabels() {
-    return request(galaxyEndpoint + '/labels.json', {
+    return request('/labels.json', {
       responseType: 'json',
       progress: reportProgress(name, 'labels')
     }).then(setLabels);
